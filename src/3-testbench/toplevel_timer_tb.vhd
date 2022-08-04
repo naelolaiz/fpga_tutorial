@@ -3,12 +3,15 @@ use ieee.std_logic_1164.all;
 
 -- test bench level entity
 entity toplevel_timer_tb is
-   generic (CYCLES_FROM_TRIGGER_TO_SET_OUTPUT : integer := 10;
-            CYCLE_PERIOD : time := 20 ns;
-            MIN_DELTA : time := 1 ns);
 end;
 
 architecture tb of toplevel_timer_tb is
+ -- constants
+  constant CYCLES_FROM_TRIGGER_TO_SET_OUTPUT : integer := 10;
+  constant CYCLE_PERIOD : time := 20 ns;
+  constant MIN_DELTA : time := 1 ns;
+  constant BUTTON_LOW_TIME : time := CYCLE_PERIOD * 2.5;
+  constant BUTTON_HIGH_TIME : time := CYCLE_PERIOD * CYCLES_FROM_TRIGGER_TO_SET_OUTPUT * 2; -- twice the needed time to expect the timer output enable
  -- signals for inputs
   signal sClock50Mhz    : std_logic := '0';
   signal sButtonTimerEnabled : std_logic := '1';
@@ -32,12 +35,12 @@ begin
   sSimulationDone <= false, true after 3 ms;
  -- 50 MHz clock
   sClock50Mhz <= not sClock50Mhz after CYCLE_PERIOD / 2 when not sSimulationDone;
- -- process for button simulation: duty cycle: 50ns off, 2 * timer_timeout on.
+ -- process for button simulation: duty cycle = BUTTON_HIGH_TIME / BUTTON_LOW_TIME
   generatePressedButton : process 
   begin
     if not sSimulationDone then
-      sButtonTimerEnabled <= '0', '1' after 50 ns;
-      wait for CYCLE_PERIOD * CYCLES_FROM_TRIGGER_TO_SET_OUTPUT * 2; -- twice the needed time to expect the timer output enable
+      sButtonTimerEnabled <= '0', '1' after BUTTON_LOW_TIME; -- 0 for BUTTON_LOW_TIME, then 1
+      wait for BUTTON_HIGH_TIME;                             -- keeps 1 for BUTTON_HIGH_TIME
     else
       wait; -- blocks here
     end if;
