@@ -44,6 +44,8 @@ begin
 
 -----------------------------------
 -- validate the output of the DUT
+
+-- High impedance output when reset enabled
   validateTimerHighImpedanceOutputOnReset : process 
   begin
     wait until sButtonTimerEnabled = '0';
@@ -52,6 +54,7 @@ begin
       report "Error0 : timer output not Z when disabled (reset on)" severity error;
   end process;
 
+-- Start timer makes output low
   validateOutputLowOnStartTimer : process 
   begin
     wait until rising_edge(sButtonTimerEnabled);
@@ -61,7 +64,7 @@ begin
       report "Error1 : timer output not 0 after a fresh reset" severity error;
   end process;
 
-
+-- Triggered timer makes output high
   validateOutputHighAfterTimerDone : process 
     variable timeSinceLow : time := 0 ns;
     constant ALLOWED_DELTA : time := 1 ns;
