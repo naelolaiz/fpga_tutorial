@@ -73,7 +73,7 @@ begin
     -- check that the timer was triggered on time
     assert (abs((now - timeSinceLow) - (CYCLES_FROM_TRIGGER_TO_SET_OUTPUT * CYCLE_PERIOD)) < ALLOWED_DELTA)
       report "Error2 : timer output not 1 after timeout period" severity error;
-    -- check that the output is still 1 after three clocks
+    -- check that the output is still 1 after four clocks
     for counter in 1 to 4 loop
        wait until rising_edge(sClock50Mhz);
        assert (sOutLed = '1')
