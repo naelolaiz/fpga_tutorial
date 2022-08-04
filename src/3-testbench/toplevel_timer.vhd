@@ -40,7 +40,7 @@ entity toplevel_timer is
   generic (CYCLES_FROM_TRIGGER_TO_SET_OUTPUT : integer := 100E6);
   port (inClock50Mhz : in std_logic;
         inNoReset    : in std_logic; 
-        outNoLed     : out std_logic);        
+        outLed       : out std_logic);        
 end;
 
 architecture logic of toplevel_timer is
@@ -56,6 +56,6 @@ timerInstance : entity work.one_time_timer(logic)
                inTimerEnabled => inNoReset,
                inReset => sReset,
                outTimer => sTimerOut);
-  outNoLed <= not sTimerOut;
+  outLed <= sTimerOut;
 end logic;
 
