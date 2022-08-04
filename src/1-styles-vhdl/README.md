@@ -4,16 +4,16 @@ And since **our board has the led and the buttons active LOW**, we want to inver
 ## Required logic diagram
 ![Required logic diagram](doc/required_logic_diagram.png)
 ## Truth table
-| **Button1** | Button1 inv | **Button2** | Button2 inv | **Button3** | Button3 inv | AND output | OR output | **Final OUTPUT** |
-|-------------|-------------|-------------|-------------|-------------|-------------|------------|-----------|------------------|
-| **1**       | 0           | **1**       | 0           | **1**       | 0           | 0          | 0         | **1**            |
-| **1**       | 0           | **1**       | 0           | **0**       | 1           | 0          | 1         | **0**            |
-| **1**       | 0           | **0**       | 1           | **1**       | 0           | 0          | 0         | **1**            |
-| **1**       | 0           | **0**       | 1           | **0**       | 1           | 0          | 1         | **0**            |
-| **0**       | 1           | **1**       | 0           | **1**       | 0           | 0          | 0         | **1**            |
-| **0**       | 1           | **1**       | 0           | **0**       | 1           | 0          | 1         | **0**            |
-| **0**       | 1           | **0**       | 1           | **1**       | 0           | 1          | 1         | **0**            |
-| **0**       | 1           | **0**       | 1           | **0**       | 1           | 1          | 1         | **0**            |
+| **Button1** | **Button2** | **Button3** | Button1 inv | Button2 inv | AND output | Button3 inv | OR output | **Final OUTPUT** |
+|-------------|-------------|-------------|-------------|-------------|------------|-------------|-----------|------------------|
+| **1**       | **1**       | **1**       | 0           | 0           | 0          | 0           | 0         | **1**            |
+| **1**       | **1**       | **0**       | 0           | 0           | 0          | 1           | 1         | **0**            |
+| **1**       | **0**       | **1**       | 0           | 1           | 0          | 0           | 0         | **1**            |
+| **1**       | **0**       | **0**       | 0           | 1           | 0          | 1           | 1         | **0**            |
+| **0**       | **1**       | **1**       | 1           | 0           | 0          | 0           | 0         | **1**            |
+| **0**       | **1**       | **0**       | 1           | 0           | 0          | 1           | 1         | **0**            |
+| **0**       | **0**       | **1**       | 1           | 1           | 1          | 0           | 1         | **0**            |
+| **0**       | **0**       | **0**       | 1           | 1           | 1          | 1           | 1         | **0**            |
 ## Four ways to implement the same logic, resulting in the same internal implementation
  * [by a circuit diagram (Led1)](diagram_example.bdf) In this case, use as top-level construct as well, instantiating all examples.
  * [by defining the data flow, with assingnments (Led2)](dataflow_example.vhd)
