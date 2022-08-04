@@ -76,7 +76,7 @@ begin
     report "Timer output not 0 after a fresh reset" severity error;
 end process;
 ```
-   * we expect a HIGH after TIMER_TIME_FOR_TRIGGER (and propagation time) passed since the timer output was set low after enabled
+   * we expect the timer output to be HIGH after TIMER_TIME_FOR_TRIGGER (and propagation time) has passed since the timer output was set low after enabled
 ```
   validateOutputHighAfterTimerDone : process
    -- expected time for the output to be 1 (until high impedance)
