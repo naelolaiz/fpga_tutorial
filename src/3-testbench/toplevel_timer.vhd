@@ -17,7 +17,7 @@ begin
     variable cyclesCount : integer range 0 to CYCLES_FROM_TRIGGER_TO_SET_OUTPUT := 0;
   begin
     if inReset = '1' then
-      outTimer <= '0';
+      outTimer <= 'Z';
       cyclesCount := 0;
     elsif rising_edge(inClock) then
       if cyclesCount < CYCLES_FROM_TRIGGER_TO_SET_OUTPUT then
