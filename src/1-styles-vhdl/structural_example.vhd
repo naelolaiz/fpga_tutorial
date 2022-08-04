@@ -27,17 +27,22 @@ entity structural_example is
 
   signal sOutAnd : std_logic := '0';
   signal sLed    : std_logic := '0';
+  signal sNotButton1, sNotButton2, sNotButton3 : std_logic := '1';
+
 
  begin
+    sNotButton1 <= not Button1;
+    sNotButton2 <= not Button2;
+    sNotButton3 <= not Button3;
     
     andInstance : and_gate
-    port map(i1 => not Button1,
-             i2 => not Button2,
+    port map(i1 => sNotButton1,
+             i2 => sNotButton2,
              o1 => sOutAnd);
 
     orInstance : or_gate
     port map(i1 => sOutAnd,
-             i2 => not Button3,
+             i2 => sNotButton3,
              o1 => sLed);
 
     notInstance : not_gate
