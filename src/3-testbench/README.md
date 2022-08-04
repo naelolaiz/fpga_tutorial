@@ -12,17 +12,15 @@ Example of testbench of a top-level entity using a single one-time-shot timer
 entity toplevel_timer_tb is
 end;
 ```
- * we use signals to check states from the simulator environment
+ * we use signals to check states from the simulator environment. In the architecture, we declare:
 ``` 
-architecture tb of toplevel_timer_tb is
- --[...]
  -- signals for inputs
   signal sClock50Mhz         : std_logic := '0';
   signal sButtonTimerEnabled : std_logic := '1';
  -- signals for outputs
   signal sOutLed             : std_logic ; 
 ```
- * in this example we use an extra boolean signal to stop the simulation
+ * in this example we also use an extra boolean signal to stop the simulation
 ```
   signal sSimulationDone : boolean := false;
 ```
@@ -34,47 +32,52 @@ DUT : entity work.toplevel_timer(logic)
              inNoReset    => sButtonTimerEnabled, 
              outLed       => sOutLed);
 ```
-* then generate the clock
+* then generate the input signals
+  * the clock, using an assignment
 ```
 sClock50Mhz <= not sClock50Mhz after CYCLE_PERIOD / 2 when not sSimulationDone;
 ``` 
-* and the input button simulation, using a process
+  * and the input button simulation, using a process
 ```
-  generatePressedButton : process 
-  begin
-    sButtonTimerEnabled <= '0';
-    wait for BUTTON_LOW_TIME;
-    sButtonTimerEnabled <= '1';
-    wait for BUTTON_HIGH_TIME_INCLUDING_TRIGGER;
-    sButtonTimerEnabled <= '0';
-    wait for BUTTON_LOW_TIME;
-    sButtonTimerEnabled <= '1';
-    wait for BUTTON_HIGH_TIME_BEFORE_TRIGGER;
-    sButtonTimerEnabled <= '0';
-    sSimulationDone <= true;
-    wait; -- blocks here
-  end process;
+generatePressedButton : process 
+begin
+  sButtonTimerEnabled <= '0';
+  wait for BUTTON_LOW_TIME;
+  sButtonTimerEnabled <= '1';
+  wait for BUTTON_HIGH_TIME_INCLUDING_TRIGGER;
+  sButtonTimerEnabled <= '0';
+  wait for BUTTON_LOW_TIME;
+  sButtonTimerEnabled <= '1';
+  wait for BUTTON_HIGH_TIME_BEFORE_TRIGGER;
+  sButtonTimerEnabled <= '0';
+  sSimulationDone <= true;
+  wait; -- blocks here
+end process;
 ```
- * then we create process for our tests
+ * then we create processes for our tests
+   * we expect HIGH-IMPEDANCE in the timer output as soon as the reset is HIGH (after the propagation time)
 ```
--- High impedance output when reset enabled
-  validateTimerHighImpedanceOutputOnReset : process 
-  begin
-    wait until sButtonTimerEnabled = '0';
-    wait for MIN_DELTA; -- wait for the signal to be propagated
-    assert (sOutLed = 'Z')
-      report "Timer output not Z when disabled (reset on)" severity error;
-  end process;
--- Start timer makes output low
-  validateOutputLowOnStartTimer : process 
-  begin
-    wait until rising_edge(sButtonTimerEnabled);
-    wait until rising_edge(sClock50Mhz);
-    wait for MIN_DELTA; -- wait for the signal to be propagated
-    assert (sOutLed = '0')
-      report "Timer output not 0 after a fresh reset" severity error;
-  end process;
--- Triggered timer makes output high
+validateTimerHighImpedanceOutputOnReset : process 
+begin
+  wait until sButtonTimerEnabled = '0';
+  wait for MIN_DELTA; -- wait for the signal to be propagated
+  assert (sOutLed = 'Z')
+    report "Timer output not Z when disabled (reset on)" severity error;
+end process;
+```
+   * we expect a LOW in the timer output the next rising edge of the clock after the timer is enabled (reset is LOW) (after the propagation time)
+```
+validateOutputLowOnStartTimer : process 
+begin
+  wait until rising_edge(sButtonTimerEnabled);
+  wait until rising_edge(sClock50Mhz);
+  wait for MIN_DELTA; -- wait for the signal to be propagated
+  assert (sOutLed = '0')
+    report "Timer output not 0 after a fresh reset" severity error;
+end process;
+```
+   * we expect a HIGH after TIMER_TIME_FOR_TRIGGER (and propagation time) passed since the timer output was set low after enabled
+```
   validateOutputHighAfterTimerDone : process
    -- expected time for the output to be 1 (until high impedance)
     constant cExpectedTimeForHighIncludingTrigger : time := BUTTON_HIGH_TIME_INCLUDING_TRIGGER - (TIMER_TIME_FOR_TRIGGER + CYCLE_PERIOD);
