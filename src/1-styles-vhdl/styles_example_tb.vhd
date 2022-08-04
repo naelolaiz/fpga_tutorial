@@ -8,6 +8,7 @@ end;
 architecture tb of styles_example_tb is
    signal sInButton1, sInButton2, sInButton3 : std_logic := '1';
    signal sLedBehavioral, sLedDataflow, sLedStructural : std_logic := '1';
+   signal sExpectedQ : std_logic := '0';
 
     -- declare record type
     type test_vector is record
@@ -20,7 +21,7 @@ architecture tb of styles_example_tb is
         -- a, b, c , q   -- positional method is used below
         ('0', '0', '0', '0'),
         ('0', '0', '1', '0'),
-        ('0', '1', '0', '0'),
+        ('0', '1', '0', '1'),
         ('0', '1', '1', '1'),
         ('1', '0', '0', '0'),
         ('1', '0', '1', '1'),
@@ -51,14 +52,15 @@ begin
         for i in test_vectors'range loop
             sInButton1 <= test_vectors(i).a;
             sInButton2 <= test_vectors(i).b;
-            sInButton2 <= test_vectors(i).b;
+            sInButton2 <= test_vectors(i).c;
+            sExpectedQ <= test_vectors(i).q;
 
             wait for 20 ns;
 
             assert ( 
                      sLedBehavioral = sLedDataflow
                      and sLedBehavioral = sLedStructural
-                     and sLedStructural = test_vectors(i).q
+                     and sLedStructural = sExpectedQ
                     )
             report  "error detected"
                     severity error;
