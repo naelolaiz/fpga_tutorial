@@ -22,7 +22,6 @@ architecture tb of toplevel_timer_tb is
  -- signals for process
   signal sSimulationDone : boolean := false;
 
-  constant cExpectedTimeForHigh : time := BUTTON_HIGH_TIME - (TIMER_TIME_FOR_TRIGGER + CYCLE_PERIOD); -- expected time for the output to be 1 (until high impedance)
 begin
 -----------------------------------
 -- instantiate device under test
@@ -74,9 +73,13 @@ begin
   end process;
 
 -- Triggered timer makes output high
-  validateOutputHighAfterTimerDone : process 
-    variable vTimestampLastLow  : time := 0 ns;
-    variable vTimestampLastHigh : time := 0 ns;
+  validateOutputHighAfterTimerDone : process
+   -- expected time for the output to be 1 (until high impedance)
+    constant cExpectedTimeForHigh : time := BUTTON_HIGH_TIME - (TIMER_TIME_FOR_TRIGGER + CYCLE_PERIOD);
+   -- used to measure timer LOW time
+    variable vTimestampLastLow    : time := 0 ns;
+   -- used to measure timer HIGH time
+    variable vTimestampLastHigh   : time := 0 ns;
   begin
     wait until sOutLed = '0';
     vTimestampLastLow := now; -- to check timing in low
@@ -94,7 +97,7 @@ begin
      end loop;
    -- check that is still high until it changes to high impedance
     wait until sOutLed = 'Z';
-    assert (abs((now - vTimestampLastHigh) - cExpectedTimeForHigh) < MIN_DELTA + (CYCLE_PERIOD / 2)) -- we have half a cycle of incertainty
+    assert (abs((now - vTimestampLastHigh) - cExpectedTimeForHigh) < MIN_DELTA + (CYCLE_PERIOD / 2)) -- we have half a cycle of uncertainty
       report "Error4 : timer output not 1 long enough" severity error;
   end process;
 
