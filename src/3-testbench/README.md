@@ -1,9 +1,9 @@
 #  Example on how to create a testbench for simulations
 Example of testbench of a top-level entity using a single one-time-shot timer
 # TOC
-1. [How the simulation looks](#simulation_screenshots)
-2. [Testbench code](#Explanation_of_the_testbench_code)
- ## Questa Simulation <a name="simulation_screenshots"/>
+1. [How the simulation looks](#questa-simulation)
+2. [Testbench code](#explanation-of-the-testbench-code)
+ ## Questa Simulation
  * Loop with repetitive signal
   ![Questa simulation](doc/Screenshot_simulation.png)
  * Simplified signal
