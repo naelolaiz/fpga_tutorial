@@ -66,11 +66,13 @@ begin
   begin
     wait until falling_edge(sOutLed);
     wait until rising_edge(sClock50Mhz);
-    wait for 500 ps; -- wait for the signal to be propagated
+    wait for CYCLE_PERIOD * CYCLES_FROM_TRIGGER_TO_SET_OUTPUT;
+    assert (sOutLed = '1')
+      report "Error2 : timer output not 1 after timeout period" severity error;
     for outputEnabledCounter in 1 to 30 loop
        wait until rising_edge(sClock50Mhz);
        assert (sOutLed = '1')
-         report "Error2 : timer output not 1 after timeout period" severity error;
+         report "Error3 : timer output not kept 1 after timeout period" severity error;
     end loop;
   end process;
 
