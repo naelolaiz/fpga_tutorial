@@ -15,15 +15,17 @@ architecture tb of toplevel_timer_tb is
   signal sOutLed      : std_logic ; 
  -- signals for process
   signal sSimulationDone : boolean := false;
-begin
 
+begin
+-----------------------------------
 -- instantiate device under test
   DUT : entity work.toplevel_timer(logic)
      generic map (CYCLES_FROM_TRIGGER_TO_SET_OUTPUT => CYCLES_FROM_TRIGGER_TO_SET_OUTPUT)
      port map (inClock50Mhz => sClock50Mhz,
                inNoReset    => sButtonTimerEnabled, 
-               outLed     => sOutLed);
+               outLed       => sOutLed);
 
+-----------------------------------
 -- generate input signals
  -- boolean to terminate simulation after 100 ms
   sSimulationDone <= false, true after 100 ms;
@@ -40,7 +42,8 @@ begin
     end if;
   end process;
 
--- checks
+-----------------------------------
+-- validate the output of the DUT
   validateTimerHighImpedanceOutputOnReset : process 
   begin
     wait until sButtonTimerEnabled = '0';
