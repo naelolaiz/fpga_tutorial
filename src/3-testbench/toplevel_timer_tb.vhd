@@ -27,11 +27,11 @@ begin
 
 -----------------------------------
 -- generate input signals
- -- boolean to terminate simulation after 100 ms
-  sSimulationDone <= false, true after 100 ms;
+ -- boolean to terminate simulation after 3 ms
+  sSimulationDone <= false, true after 3 ms;
  -- 50 MHz clock
   sClock50Mhz <= not sClock50Mhz after CYCLE_PERIOD / 2 when not sSimulationDone;
-  -- process for button simulation: duty cycle is 50ns off, 2 * timer_timeout on.
+ -- process for button simulation: duty cycle: 50ns off, 2 * timer_timeout on.
   generatePressedButton : process 
   begin
     if not sSimulationDone then
@@ -47,7 +47,7 @@ begin
   validateTimerHighImpedanceOutputOnReset : process 
   begin
     wait until sButtonTimerEnabled = '0';
-    wait for 2 ns; -- wait for the signal to be propagated
+    wait for 500 ps; -- wait for the signal to be propagated
     assert (sOutLed = 'Z')
       report "Error0 : timer output not Z when disabled (reset on)" severity error;
   end process;
@@ -56,7 +56,7 @@ begin
   begin
     wait until rising_edge(sButtonTimerEnabled);
     wait until rising_edge(sClock50Mhz);
-    wait for 2 ns; -- wait for the signal to be propagated
+    wait for 500 ps; -- wait for the signal to be propagated
     assert (sOutLed = '0')
       report "Error1 : timer output not 0 after a fresh reset" severity error;
   end process;
@@ -66,7 +66,7 @@ begin
   begin
     wait until falling_edge(sOutLed);
     wait until rising_edge(sClock50Mhz);
-    wait for 2 ns; -- wait for the signal to be propagated
+    wait for 500 ps; -- wait for the signal to be propagated
     for outputEnabledCounter in 1 to 30 loop
        wait until rising_edge(sClock50Mhz);
        assert (sOutLed = '1')
