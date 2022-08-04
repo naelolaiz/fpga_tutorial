@@ -15,8 +15,6 @@ architecture tb of toplevel_timer_tb is
   signal sInputSignalForSimulationDone : boolean := false;
 begin
 
-
-
 -- instantiate device under test
   DUT : entity work.toplevel_timer(logic)
      generic map (CYCLES_FROM_TRIGGER_TO_SET_OUTPUT => 10)
@@ -30,9 +28,22 @@ begin
   generatePressedButtons : process 
   begin
     sButtonTimerEnabled <= '0';
-    wait for 30 ns;
+--    wait until sClock50Mhz = '1';
+    wait until sClock50Mhz = '1';
+    assert (sOutLed = '0')
+      report "Error0 : timer output not 0 when disabled (reset on)" severity error;
+    wait until sClock50Mhz = '0';
     sButtonTimerEnabled <= '1';
-    wait for 300 ns;
+--    wait until sClock50Mhz = '1';
+    wait until sClock50Mhz = '1';
+    assert (sOutLed = '0')
+      report "Error1 : timer output not 0 after a fresh reset" severity error;
+    wait for 20 ns * 10; -- (50 MHz, 10 cycles)
+    for outputEnabledCounter in 1 to 30 loop
+       wait until sClock50Mhz = '1';
+       assert (sOutLed = '1')
+         report "Error2 : timer output not 1 after timeout period" severity error;
+    end loop;
   end process;
 
   sInputSignalForSimulationDone <= false, true after 100 ms;
