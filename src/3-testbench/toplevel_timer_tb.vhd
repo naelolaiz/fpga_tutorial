@@ -76,7 +76,7 @@ begin
 -- Triggered timer makes output high
   validateOutputHighAfterTimerDone : process
    -- expected time for the output to be 1 (until high impedance)
-    constant cExpectedTimeForHigh : time := BUTTON_HIGH_TIME - (TIMER_TIME_FOR_TRIGGER + CYCLE_PERIOD);
+    constant cExpectedTimeForHighIncludingTrigger : time := BUTTON_HIGH_TIME_INCLUDING_TRIGGER - (TIMER_TIME_FOR_TRIGGER + CYCLE_PERIOD);
    -- used to measure timer LOW time
     variable vTimestampLastLow    : time := 0 ns;
    -- used to measure timer HIGH time
@@ -98,7 +98,7 @@ begin
      end loop;
    -- check that is still high until it changes to high impedance
     wait until sOutLed = 'Z';
-    assert (abs((now - vTimestampLastHigh) - cExpectedTimeForHigh) < MIN_DELTA + (CYCLE_PERIOD / 2)) -- we have half a cycle of uncertainty
+    assert (abs((now - vTimestampLastHigh) - cExpectedTimeForHighIncludingTrigger) < MIN_DELTA + (CYCLE_PERIOD / 2)) -- we have half a cycle of uncertainty
       report "Error4 : timer output not 1 long enough" severity error;
   end process;
 
