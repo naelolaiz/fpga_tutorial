@@ -37,6 +37,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 entity toplevel_timer is
+  generic (CYCLES_FROM_TRIGGER_TO_SET_OUTPUT : integer := 100E6);
   port (inClock50Mhz : in std_logic;
         inNoReset    : in std_logic; 
         outNoLed     : out std_logic);        
@@ -44,13 +45,16 @@ end;
 
 architecture logic of toplevel_timer is
   signal sTimerOut : std_logic;
+  signal sReset : std_logic;
 begin
 
+sReset <= not inNoReset;
+
 timerInstance : entity work.one_time_timer(logic)
-  generic map (CYCLES_FROM_TRIGGER_TO_SET_OUTPUT => 100E6)
+  generic map (CYCLES_FROM_TRIGGER_TO_SET_OUTPUT => CYCLES_FROM_TRIGGER_TO_SET_OUTPUT)
   port map    (inClock => inClock50Mhz,
                inTimerEnabled => inNoReset,
-               inReset => not inNoReset,
+               inReset => sReset,
                outTimer => sTimerOut);
   outNoLed <= not sTimerOut;
 end logic;
