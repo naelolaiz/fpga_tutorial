@@ -4,7 +4,8 @@ use ieee.std_logic_1164.all;
 -- test bench level entity
 entity toplevel_timer_tb is
    generic (CYCLES_FROM_TRIGGER_TO_SET_OUTPUT : integer := 10;
-            CYCLE_PERIOD : time := 20 ns);
+            CYCLE_PERIOD : time := 20 ns;
+            MIN_DELTA : time := 1 ns);
 end;
 
 architecture tb of toplevel_timer_tb is
@@ -49,7 +50,7 @@ begin
   validateTimerHighImpedanceOutputOnReset : process 
   begin
     wait until sButtonTimerEnabled = '0';
-    wait for 1 ns; -- wait for the signal to be propagated
+    wait for MIN_DELTA; -- wait for the signal to be propagated
     assert (sOutLed = 'Z')
       report "Error0 : timer output not Z when disabled (reset on)" severity error;
   end process;
@@ -59,7 +60,7 @@ begin
   begin
     wait until rising_edge(sButtonTimerEnabled);
     wait until rising_edge(sClock50Mhz);
-    wait for 1 ns; -- wait for the signal to be propagated
+    wait for MIN_DELTA; -- wait for the signal to be propagated
     assert (sOutLed = '0')
       report "Error1 : timer output not 0 after a fresh reset" severity error;
   end process;
@@ -67,14 +68,13 @@ begin
 -- Triggered timer makes output high
   validateOutputHighAfterTimerDone : process 
     variable timeSinceLow : time := 0 ns;
-    constant ALLOWED_DELTA : time := 1 ns;
   begin
     wait until sOutLed = '0';
     timeSinceLow := now;
     wait until rising_edge(sClock50Mhz);
     wait until sOutLed = '1';
     -- check that the timer was triggered on time
-    assert (abs((now - timeSinceLow) - (CYCLES_FROM_TRIGGER_TO_SET_OUTPUT * CYCLE_PERIOD)) < ALLOWED_DELTA)
+    assert (abs((now - timeSinceLow) - (CYCLES_FROM_TRIGGER_TO_SET_OUTPUT * CYCLE_PERIOD)) < MIN_DELTA)
       report "Error2 : timer output not 1 after timeout period" severity error;
     -- check that the output is still 1 after four clocks
     for counter in 1 to 4 loop
