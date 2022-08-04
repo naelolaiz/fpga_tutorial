@@ -15,7 +15,7 @@ And since **our board has the led and the buttons active LOW**, we want to inver
 | **0**       | **0**       | **1**       | 1           | 1           | 1          | 0           | 1         | **0**            |
 | **0**       | **0**       | **0**       | 1           | 1           | 1          | 1           | 1         | **0**            |
 ## Four ways to implement the same logic, resulting in the same internal implementation
- * [by a circuit diagram (Led1)](diagram_example.bdf) In this case, use as top-level construct as well, instantiating all examples.
+ * [by a circuit diagram / netlist (Led1)](diagram_example.bdf) In this case, use as top-level construct as well, instantiating all examples.
  * [by defining the data flow, with assingnments (Led2)](dataflow_example.vhd)
  * [by defining the expected behavior, with processes and sequential definitions (Led3)](behavioral_example.vhd)
  * [by defining the structure of instances of entities/components/primitives (Led4)](structural_example.vhd)
