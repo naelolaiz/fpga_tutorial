@@ -14,13 +14,13 @@ end;
 architecture logic of one_time_timer is
 begin
   TimerProcess : process (inClock, inReset)
-    variable cyclesCount : integer range 0 to (CYCLES_FROM_TRIGGER_TO_SET_OUTPUT-1) := 0;
+    variable cyclesCount : integer range 0 to CYCLES_FROM_TRIGGER_TO_SET_OUTPUT := 0;
   begin
     if inReset = '1' then
       outTimer <= '0';
       cyclesCount := 0;
     elsif rising_edge(inClock) then
-      if cyclesCount < CYCLES_FROM_TRIGGER_TO_SET_OUTPUT - 1 then
+      if cyclesCount < CYCLES_FROM_TRIGGER_TO_SET_OUTPUT then
         cyclesCount := cyclesCount + 1;
         outTimer <= '0';
       else
