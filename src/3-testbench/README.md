@@ -1,5 +1,10 @@
 #  Example on how to create a testbench for simulations
 Example of testbench of a top-level entity using a single one-time-shot timer
+ ## Questa Simulation
+ * Loop with repetitive signal
+  ![Questa simulation](doc/Screenshot_simulation.png)
+ * Simplified signal
+  ![Questa simulation](doc/Screenshot_simulation_simplified_signal.png)
 ## Explanation of the code
  * for the testbench we use a portless entity 
 ```
@@ -98,8 +103,3 @@ sClock50Mhz <= not sClock50Mhz after CYCLE_PERIOD / 2 when not sSimulationDone;
       report "Error4 : timer output not 1 long enough" severity error;
   end process;
  ```
- ## Questa Simulation
- * Loop with repetitive signal
-  ![Questa simulation](doc/Screenshot_simulation.png)
- * Simplified signal
-  ![Questa simulation](doc/Screenshot_simulation_simplified_signal.png)
