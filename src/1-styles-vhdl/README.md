@@ -4,7 +4,7 @@ And since **our board has the led and the buttons active LOW**, we want to inver
 ## Required logic diagram
 ![Required logic diagram](doc/required_logic_diagram.png)
 ## Truth table
-| **Button1** | **Button2** | **Button3** | Button1 inv | Button2 inv | AND output | Button3 inv | OR output | **Final OUTPUT** |
+| **Button1** | **Button2** | **Button3** | not Button1 | not Button2 | AND output | not Button3 | OR output | **Final OUTPUT** |
 |-------------|-------------|-------------|-------------|-------------|------------|-------------|-----------|------------------|
 | **1**       | **1**       | **1**       | 0           | 0           | 0          | 0           | 0         | **1**            |
 | **1**       | **1**       | **0**       | 0           | 0           | 0          | 1           | 1         | **0**            |
