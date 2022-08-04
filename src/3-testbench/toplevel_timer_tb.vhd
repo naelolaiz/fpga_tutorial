@@ -47,7 +47,7 @@ begin
   validateTimerHighImpedanceOutputOnReset : process 
   begin
     wait until sButtonTimerEnabled = '0';
-    wait for 500 ps; -- wait for the signal to be propagated
+    wait for 1 ns; -- wait for the signal to be propagated
     assert (sOutLed = 'Z')
       report "Error0 : timer output not Z when disabled (reset on)" severity error;
   end process;
@@ -56,24 +56,28 @@ begin
   begin
     wait until rising_edge(sButtonTimerEnabled);
     wait until rising_edge(sClock50Mhz);
-    wait for 500 ps; -- wait for the signal to be propagated
+    wait for 1 ns; -- wait for the signal to be propagated
     assert (sOutLed = '0')
       report "Error1 : timer output not 0 after a fresh reset" severity error;
   end process;
 
 
   validateOutputHighAfterTimerDone : process 
+    variable timeSinceLow : time := 0 ns;
   begin
-    wait until falling_edge(sOutLed);
+    wait until sOutLed = '0';
+    timeSinceLow := now;
     wait until rising_edge(sClock50Mhz);
-    wait for CYCLE_PERIOD * CYCLES_FROM_TRIGGER_TO_SET_OUTPUT;
-    assert (sOutLed = '1')
+    wait until sOutLed = '1';
+    -- check that the timer was triggered on time
+    assert (abs((now - timeSinceLow) - (CYCLES_FROM_TRIGGER_TO_SET_OUTPUT * CYCLE_PERIOD)) < 1 ns)
       report "Error2 : timer output not 1 after timeout period" severity error;
-    for outputEnabledCounter in 1 to 30 loop
+    -- check that the output is still 1 after three clocks
+    for counter in 1 to 4 loop
        wait until rising_edge(sClock50Mhz);
        assert (sOutLed = '1')
          report "Error3 : timer output not kept 1 after timeout period" severity error;
-    end loop;
+     end loop;
   end process;
 
 end tb;
