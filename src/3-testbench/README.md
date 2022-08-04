@@ -5,7 +5,7 @@ Example of testbench of a top-level entity using a single one-time-shot timer
   ![Questa simulation](doc/Screenshot_simulation.png)
  * Simplified signal
   ![Questa simulation](doc/Screenshot_simulation_simplified_signal.png)
-## Explanation of the code
+## Explanation of the testbench code
  * for the testbench we use a portless entity 
 ```
 -- test bench level entity
