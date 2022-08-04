@@ -31,7 +31,7 @@ begin
   sSimulationDone <= false, true after 100 ms;
  -- 50 MHz clock
   sClock50Mhz <= not sClock50Mhz after CYCLE_PERIOD / 2 when not sSimulationDone;
--- process for button simulation: 50ns off / 100 ns on 
+  -- process for button simulation: duty cycle is 50ns off, 2 * timer_timeout on.
   generatePressedButton : process 
   begin
     if not sSimulationDone then
