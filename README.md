@@ -17,6 +17,6 @@ ghdl -r input_tb --vcd=output.vcd
 * then the vcd file can be opened from gtkwave and it looks like this:
 ![gtkwave of simulation of example 3](doc/screenshot_gtkwave_on_example_3.png)
 
-Alternatives for gtkwave:
+Alternatives for gtkwave (they even have serial decoders!)
  * [sigrok](https://sigrok.org/wiki/Main_Page)
  * [PulseView](https://sigrok.org/wiki/PulseView) (Qt frontend for sigrok)
