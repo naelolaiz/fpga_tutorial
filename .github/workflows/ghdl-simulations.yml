@@ -28,7 +28,7 @@ jobs:
         backend: llvm
         
     - name: Install gtkwave and related tools for generating the simulation screenshots
-      run: sudo apt-get install -y gtkwave python-pip scrot xvfb xserver-xephyr python-imaging
+      run: sudo apt-get install -y gtkwave python-pip scrot xvfb python-pil
 
         
     - name: testbench_sanity_check_expect_error
