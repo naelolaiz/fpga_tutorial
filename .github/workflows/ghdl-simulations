@@ -1,0 +1,43 @@
+name: CI
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+jobs:
+  ubuntu:
+    strategy:
+      fail-fast: false
+      matrix:
+        backend: [ '', mcode, llvm, gcc ]
+        version: [ 18.04, 20.04, latest ]
+    runs-on: ubuntu-${{ matrix.version }}
+    name: '🐧 Ubuntu ${{ matrix.version }} · ${{ matrix.backend }}'
+    steps:
+
+    - name: '🧰 Checkout'
+      uses: actions/checkout@v2
+
+    - uses: ghdl/setup-ghdl-ci@nightly
+      with: 
+        backend: llvm
+    - name: testbench_styles_example
+      run: |
+        echo "GHDL_PREFIX: $GHDL_PREFIX"
+        echo "GHDL: $GHDL"
+        echo "GHDL_LIBS: $GHDL_LIBS"
+        ghdl --version
+        $GHDL --version
+        cd src/1-styles-vhdl
+        ghdl -a dataflow_example.vhd
+        ghdl -a structural_components.vhd
+        ghdl -a structural_example.vhd
+        ghdl -a behavioral_example.vhd
+        ghdl -a styles_example_tb.vhd
+        ghdl -e styles_example_tb
+        ./styles_example_tb
