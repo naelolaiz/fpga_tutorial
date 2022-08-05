@@ -8,9 +8,11 @@ Added [github actions CI jobs](https://github.com/naelolaiz/fpga_tutorial/action
 ![screenshot github action](doc/screenshot_ci_job_with_ghdl.png)
 ### TODO
 * integrate https://github.com/ponty/sphinxcontrib-gtkwave to generate screenshots of the simulation with gtkwave  
-  * generate .vcd file for gtkwave as
+* generate .vcd file for gtkwave as
 ```
 ghdl -a input_tb.vhd
 ghdl -e input_tb
 ghdl -r input_tb --vcd=output.vcd
 ```
+* then the vcd file can be opened from gtkwave and it looks like this:
+![gtkwave of simulation of example 3](doc/screenshot_gtkwave_on_example_3.png)
