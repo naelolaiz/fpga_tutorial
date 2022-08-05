@@ -21,3 +21,5 @@ And since **our board has the led and the buttons active LOW**, we want to inver
  * [by defining the structure of instances of entities/components/primitives (Led4)](structural_example.vhd)
 ## Top-level circuit diagram
 ![RTL viewer](doc/RTL_viewer.png)
+## Testbench added!
+![testbench simulation screenshot](doc/testbench.png)
