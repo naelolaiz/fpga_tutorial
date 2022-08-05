@@ -6,19 +6,19 @@ Collecting small FPGA examples as a tutorial
 ## GHDL github Actions
 Added [github actions CI jobs](https://github.com/naelolaiz/fpga_tutorial/actions) for simulating the examples with GHDL!
 ![screenshot github action](doc/screenshot_ci_job_with_ghdl.png)
-### TODO
-#### Auto-generate screenshots in jobs
-* <s>integrate https://github.com/ponty/sphinxcontrib-gtkwave to generate screenshots of the simulation with gtkwave</s> : [adapted code](scripts/gtkwave_export.py)
 
-* generate .vcd file for gtkwave as
+### Auto-generated screenshots in jobs
+Each gitlab job creates a screenshot of gtkwave showing the signals, and it is upload as an artifact:
+
+![automatic screenshots of gtkwave!](doc/screenshot_automatic_generated_gtkwave_screenshots.png)
+
+* code adapted from https://github.com/ponty/sphinxcontrib-gtkwave to generate screenshots of the simulation with gtkwave ([adapted code](scripts/gtkwave_export.py))
+* .vcd file for gtkwave generated as
 ```
 ghdl -a input_tb.vhd
 ghdl -e input_tb
 ghdl -r input_tb --vcd=output.vcd
 ```
-* then the vcd file can be opened from gtkwave and it looks like this:
-![gtkwave of simulation of example 3](doc/screenshot_gtkwave_on_example_3.png)
-
 Alternatives for gtkwave
  * [sigrok](https://sigrok.org/wiki/Main_Page)
    * includes command line interface
