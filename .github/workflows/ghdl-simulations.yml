@@ -15,7 +15,8 @@ jobs:
       fail-fast: false
       matrix:
         backend: [ '', mcode, llvm, gcc ]
-        version: [ 18.04, 20.04, latest ]
+        version: [ 20.04, latest ]
+        #version: [ 18.04, 20.04, latest ] # TODO: put 18.04 back commenting screenshots generation on it
     runs-on: ubuntu-${{ matrix.version }}
     name: '🐧 Ubuntu ${{ matrix.version }} · ${{ matrix.backend }}'
     steps:
@@ -37,7 +38,6 @@ jobs:
         
     - name: testbench_sanity_check_expect_error
       id : sanity_check_test_expect_error
-      continue-on-error: true
       run: |
         echo "GHDL_PREFIX: $GHDL_PREFIX"
         echo "GHDL: $GHDL"
@@ -46,9 +46,7 @@ jobs:
         cd src/3-testbench/sanity_check_tb
         $GHDL -a sanity_check_tb.vhd
         $GHDL -e sanity_check_tb
-        ./sanity_check_tb --assert-level=error
-    - name: Check sanity check result
-      run: if [[ ${{ steps.sanity_check_test_expect_error.outcome }} == "failure" ]]; then exit 0; else exit 1; fi
+        ./sanity_check_tb --assert-level=error && exit -1 || echo "Expected failure OK!"
 
     - name: testbench_styles_example
       run: |
@@ -59,6 +57,10 @@ jobs:
         $GHDL -a behavioral_example.vhd
         $GHDL -a styles_example_tb.vhd
         $GHDL -e styles_example_tb
+        $GHDL -r styles_example_tb --vcd=styles_example_tb.vcd
+        python3 ../../scripts/gtkwave_export.py styles_example_tb.vcd
+        mkdir  ../../out_screenshots
+        mv gtkwave_id0.png ../../out_screenshots/styles-example_signals.png # TODO: rename output filename in script
         ./styles_example_tb --assert-level=error
     - name: testbench_testbench_example
       run: |
@@ -68,10 +70,9 @@ jobs:
         $GHDL -e toplevel_timer_tb
         $GHDL -r toplevel_timer_tb --vcd=toplevel_timer_tb.vcd
         python3 ../../scripts/gtkwave_export.py toplevel_timer_tb.vcd
-        mkdir  ../../out_screenshots
-        mv gtkwave_id0.png ../../out_screenshots/testbench_signals.png # TODO: rename output filename in script
+        mv gtkwave_id0.png ../../out_screenshots/testbench-example_signals.png # TODO: rename output filename in script
         ./toplevel_timer_tb --assert-level=error
     - uses: actions/upload-artifact@v3
       with:
-        name: screenshots
-        path: out_screenshots/
+        name: screenshots  ${{ matrix.version }}·${{ matrix.backend }}
+        path: ${{ github.workspace }}/out_screenshots/
