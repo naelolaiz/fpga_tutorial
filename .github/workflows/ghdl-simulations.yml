@@ -26,6 +26,21 @@ jobs:
     - uses: ghdl/setup-ghdl-ci@nightly
       with: 
         backend: llvm
+    - name: testbench_sanity_check_expect_error
+      id : sanity_check_test_expect_error
+      continue-on-error: true
+      run: |
+        echo "GHDL_PREFIX: $GHDL_PREFIX"
+        echo "GHDL: $GHDL"
+        echo "GHDL_LIBS: $GHDL_LIBS"
+        $GHDL --version
+        cd src/3-testbench/sanity_check_tb
+        $GHDL -a sanity_check_tb.vhd
+        $GHDL -e sanity_check_tb
+        ./sanity_check_tb --assert-level=error
+    - name: Invert success and failure
+      run: if [[ ${{ steps.sanity_check_test_expect_error.outcome }} == "failure" ]]; then exit 0; else exit 1; fi
+
     - name: testbench_styles_example
       run: |
         echo "GHDL_PREFIX: $GHDL_PREFIX"
@@ -39,7 +54,7 @@ jobs:
         $GHDL -a behavioral_example.vhd
         $GHDL -a styles_example_tb.vhd
         $GHDL -e styles_example_tb
-        ./styles_example_tb
+        ./styles_example_tb --assert-level=error
     - name: testbench_testbench_example
       run: |
         echo "GHDL_PREFIX: $GHDL_PREFIX"
@@ -50,4 +65,4 @@ jobs:
         $GHDL -a toplevel_timer.vhd
         $GHDL -a toplevel_timer_tb.vhd
         $GHDL -e toplevel_timer_tb
-        ./toplevel_timer_tb
+        ./toplevel_timer_tb --assert-level=error
