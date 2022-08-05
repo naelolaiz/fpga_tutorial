@@ -23,4 +23,6 @@ Since **our board has the led and the buttons active LOW**, we want to invert al
 ## Top-level circuit diagram
 ![RTL viewer](doc/RTL_viewer.png)
 ## Testbench added!
+Using the truth table:
+
 ![testbench simulation screenshot](doc/testbench.png)
