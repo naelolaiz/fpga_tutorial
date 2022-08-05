@@ -46,7 +46,7 @@ jobs:
         $GHDL -e sanity_check_tb
         ./sanity_check_tb --assert-level=error && exit -1 || echo "Expected failure OK!"
         # create dir for next jobs
-        mkdir  ../../out_screenshots
+        mkdir ${{ github.workspace }}/out_screenshots
 
     - name: testbench_styles_example
       run: |
