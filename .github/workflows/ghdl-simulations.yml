@@ -41,3 +41,15 @@ jobs:
         ghdl -a styles_example_tb.vhd
         ghdl -e styles_example_tb
         ./styles_example_tb
+    - name: testbench_testbench_example
+      run: |
+        echo "GHDL_PREFIX: $GHDL_PREFIX"
+        echo "GHDL: $GHDL"
+        echo "GHDL_LIBS: $GHDL_LIBS"
+        ghdl --version
+        $GHDL --version
+        cd src/3-testbench
+        ghdl -a toplevel_timer.vhd
+        ghdl -a toplevel_timer_tb.vhd
+        ghdl -e toplevel_timer_tb
+        ./toplevel_timer_tb

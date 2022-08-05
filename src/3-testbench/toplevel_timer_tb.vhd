@@ -48,6 +48,7 @@ begin
     wait for BUTTON_HIGH_TIME_BEFORE_TRIGGER;
     sButtonTimerEnabled <= '0';
     sSimulationDone <= true;
+    report "Simulation done!" severity note;
     wait; -- blocks here
   end process;
 
