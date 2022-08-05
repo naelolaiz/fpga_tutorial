@@ -22,3 +22,5 @@ Alternatives for gtkwave
    * includes command line interface
  * [PulseView](https://sigrok.org/wiki/PulseView) (Qt frontend for sigrok)
    * includes serial bus decoders! (I guess sigrok already have them)
+![pulseview screenshot on example 3](doc/screenshot_pulseview_on_example_3.png)
+ 
