@@ -60,6 +60,10 @@ jobs:
         $GHDL -a behavioral_example.vhd
         $GHDL -a styles_example_tb.vhd
         $GHDL -e styles_example_tb
+        $GHDL -r styles_example_tb --vcd=styles_example_tb.vcd
+        python3 ../../scripts/gtkwave_export.py styles_example_tb.vcd
+        mkdir  ../../out_screenshots
+        mv gtkwave_id0.png ../../out_screenshots/styles-example_signals.png # TODO: rename output filename in script
         ./styles_example_tb --assert-level=error
     - name: testbench_testbench_example
       run: |
@@ -69,8 +73,7 @@ jobs:
         $GHDL -e toplevel_timer_tb
         $GHDL -r toplevel_timer_tb --vcd=toplevel_timer_tb.vcd
         python3 ../../scripts/gtkwave_export.py toplevel_timer_tb.vcd
-        mkdir  ../../out_screenshots
-        mv gtkwave_id0.png ../../out_screenshots/testbench_signals.png # TODO: rename output filename in script
+        mv gtkwave_id0.png ../../out_screenshots/testbench-example_signals.png # TODO: rename output filename in script
         ./toplevel_timer_tb --assert-level=error
     - uses: actions/upload-artifact@v3
       with:
