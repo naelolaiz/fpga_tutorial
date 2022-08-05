@@ -8,7 +8,7 @@ import tempfile
 from  path import Path
 
 """
-adapted from sphinxcontrib.gtkwave
+adapted from sphinxcontrib.gtkwave (https://github.com/ponty/sphinxcontrib-gtkwave)
     Workaround for missing GTKWAVE export png functionality. Takes a screenshot of GtkWave running on a dummy x11 server.
 """
 
