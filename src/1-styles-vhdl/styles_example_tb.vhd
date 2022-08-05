@@ -6,9 +6,9 @@ entity styles_example_tb is
 end;
 
 architecture tb of styles_example_tb is
-   signal sInButton1, sInButton2, sInButton3 : std_logic := '1';
+   signal sA, sB, sC : std_logic := '1';
    signal sLedBehavioral, sLedDataflow, sLedStructural : std_logic := '1';
-   signal sExpectedQ : std_logic := '0';
+   signal sQ : std_logic := '0';
    signal sI : integer;
 
     -- declare record type
@@ -31,47 +31,47 @@ architecture tb of styles_example_tb is
         );
 begin
   behavioralInstance : entity work.behavioral_example(behavioral)
-     port map (Button1 => sInButton1,
-               Button2 => sInButton2, 
-               Button3 => sInButton3, 
+     port map (Button1 => sA,
+               Button2 => sB, 
+               Button3 => sC, 
                Led  => sLedBehavioral);
 
   structuralInstance : entity work.structural_example(structural)
-     port map (Button1 => sInButton1,
-               Button2 => sInButton2, 
-               Button3 => sInButton3, 
+     port map (Button1 => sA,
+               Button2 => sB, 
+               Button3 => sC, 
                Led  => sLedStructural);
 
   dataflowInstance : entity work.dataflow_example(logic)
-     port map (Button1 => sInButton1,
-               Button2 => sInButton2, 
-               Button3 => sInButton3, 
+     port map (Button1 => sA,
+               Button2 => sB, 
+               Button3 => sC, 
                Led  => sLedDataflow);
 
     tb : process
     begin
         for i in test_vectors'range loop
             sI <= i;
-            sInButton1 <= test_vectors(i).a;
-            sInButton2 <= test_vectors(i).b;
-            sInButton3 <= test_vectors(i).c;
-            sExpectedQ <= test_vectors(i).q;
+            sA <= test_vectors(i).a;
+            sB <= test_vectors(i).b;
+            sC <= test_vectors(i).c;
+            sQ <= test_vectors(i).q;
 
             wait for 10 ns;
 
             assert ( 
                      sLedBehavioral = sLedDataflow
                      and sLedBehavioral = sLedStructural
-                     and sLedStructural = sExpectedQ
+                     and sLedStructural = sQ
                     )
             report  "error detected! "
                      & "i: " & integer'image(sI)
                      & ". Inputs: "
-                     & std_logic'image(sInButton1) 
+                     & std_logic'image(sA) 
                      & ", " 
-                     & std_logic'image(sInButton2) 
+                     & std_logic'image(sB) 
                      & ", " 
-                     & std_logic'image(sInButton3) 
+                     & std_logic'image(sC) 
                      & ". behavioral: " 
                      & std_logic'image(sLedBehavioral) 
                      & ", dataflow: " 
@@ -79,7 +79,7 @@ begin
                      & ", structural: " 
                      & std_logic'image(sLedStructural) 
                      & ", expected: " 
-                     & std_logic'image(sExpectedQ) 
+                     & std_logic'image(sQ) 
 
                     severity error;
         end loop;
