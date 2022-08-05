@@ -26,6 +26,11 @@ jobs:
     - uses: ghdl/setup-ghdl-ci@nightly
       with: 
         backend: llvm
+        
+    - name: Install gtkwave and related tools for generating the simulation screenshots
+      run: sudo apt-get install -y gtkwave python-pip scrot xvfb xserver-xephyr python-imaging
+
+        
     - name: testbench_sanity_check_expect_error
       id : sanity_check_test_expect_error
       continue-on-error: true
@@ -57,4 +62,6 @@ jobs:
         $GHDL -a toplevel_timer.vhd
         $GHDL -a toplevel_timer_tb.vhd
         $GHDL -e toplevel_timer_tb
+        $GHDL -r toplevel_timer_tb --vcd=toplevel_timer_tb.vcd
+        python3 ../../scripts/gtkwave_export.py toplevel_timer_tb.vcd
         ./toplevel_timer_tb --assert-level=error
