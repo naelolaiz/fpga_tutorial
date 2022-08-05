@@ -74,5 +74,5 @@ jobs:
         ./toplevel_timer_tb --assert-level=error
     - uses: actions/upload-artifact@v3
       with:
-        name: screenshots
-        path: out_screenshots/
+        name: screenshots ${{ matrix.node-version }}
+        path: ${{ github.workspace }}/out_screenshots/
