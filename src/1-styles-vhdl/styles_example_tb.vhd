@@ -83,9 +83,9 @@ begin
 
                     severity error;
         end loop;
+        report "Simulation done!" severity note;
         wait;
     end process; 
-
                
 end tb;
 
