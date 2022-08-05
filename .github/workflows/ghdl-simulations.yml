@@ -45,6 +45,8 @@ jobs:
         $GHDL -a sanity_check_tb.vhd
         $GHDL -e sanity_check_tb
         ./sanity_check_tb --assert-level=error && exit -1 || echo "Expected failure OK!"
+        # create dir for next jobs
+        mkdir  ../../out_screenshots
 
     - name: testbench_styles_example
       run: |
@@ -57,9 +59,8 @@ jobs:
         $GHDL -e styles_example_tb
         $GHDL -r styles_example_tb --assert-level=error --vcd=styles_example_tb.vcd
         python3 ../../scripts/gtkwave_export.py styles_example_tb.vcd
-        mkdir  ../../out_screenshots
-        mv gtkwave_id0.png ../../out_screenshots/styles-example_signals.png # TODO: rename output filename in script
-        
+        mv gtkwave_styles_example_tb.png ../../out_screenshots/
+
     - name: testbench_testbench_example
       run: |
         cd src/3-testbench
@@ -68,9 +69,9 @@ jobs:
         $GHDL -e toplevel_timer_tb
         $GHDL -r toplevel_timer_tb --assert-level=error --vcd=toplevel_timer_tb.vcd
         python3 ../../scripts/gtkwave_export.py toplevel_timer_tb.vcd
-        mv gtkwave_id0.png ../../out_screenshots/testbench-example_signals.png # TODO: rename output filename in script
-        
+        mv gtkwave_toplevel_timer_tb.png ../../out_screenshots/
+
     - uses: actions/upload-artifact@v3
       with:
-        name: screenshots  ${{ matrix.version }}·${{ matrix.backend }}
+        name: screenshots-${{ matrix.version }}${{ matrix.backend }}
         path: ${{ github.workspace }}/out_screenshots/
