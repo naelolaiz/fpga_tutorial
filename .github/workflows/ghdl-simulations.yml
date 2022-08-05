@@ -67,4 +67,10 @@ jobs:
         $GHDL -e toplevel_timer_tb
         $GHDL -r toplevel_timer_tb --vcd=toplevel_timer_tb.vcd
         python3 ../../scripts/gtkwave_export.py toplevel_timer_tb.vcd
+        mkdir  ../../out_screenshots
+        mv gtkwave_id0.png ../../out_screenshots/testbench_signals.png # TODO: rename output filename in script
         ./toplevel_timer_tb --assert-level=error
+    -name: upload artifacts with screenshots
+     uses: actions/upload-artifact@v3
+     with:
+     path: out_screenshots/
