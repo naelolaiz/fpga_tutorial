@@ -43,10 +43,6 @@ jobs:
 
     - name: testbench_styles_example
       run: |
-        echo "GHDL_PREFIX: $GHDL_PREFIX"
-        echo "GHDL: $GHDL"
-        echo "GHDL_LIBS: $GHDL_LIBS"
-        $GHDL --version
         cd src/1-styles-vhdl
         $GHDL -a dataflow_example.vhd
         $GHDL -a structural_components.vhd
@@ -57,10 +53,6 @@ jobs:
         ./styles_example_tb --assert-level=error
     - name: testbench_testbench_example
       run: |
-        echo "GHDL_PREFIX: $GHDL_PREFIX"
-        echo "GHDL: $GHDL"
-        echo "GHDL_LIBS: $GHDL_LIBS"
-        $GHDL --version
         cd src/3-testbench
         $GHDL -a toplevel_timer.vhd
         $GHDL -a toplevel_timer_tb.vhd
