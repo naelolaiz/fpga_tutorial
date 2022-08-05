@@ -30,6 +30,7 @@ jobs:
     - name: Install gtkwave and related tools for generating the simulation screenshots
       run: | 
         sudo apt-get install -y gtkwave scrot xvfb python-pil python3-pyvirtualdisplay
+        pip3 install --user --upgrade setuptools wheel # ubuntu 18.04 apparently doesnt have proper setuptools
         pip3 install --user pillow pyscreenshot path
       # python3-pip 
 
@@ -70,7 +71,7 @@ jobs:
         mkdir  ../../out_screenshots
         mv gtkwave_id0.png ../../out_screenshots/testbench_signals.png # TODO: rename output filename in script
         ./toplevel_timer_tb --assert-level=error
-    -name: upload artifacts with screenshots
-     uses: actions/upload-artifact@v3
-     with:
-     path: out_screenshots/
+    - uses: actions/upload-artifact@v3
+      with:
+        name: screenshots
+        path: out_screenshots/
