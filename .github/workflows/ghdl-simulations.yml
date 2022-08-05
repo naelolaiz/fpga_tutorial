@@ -28,7 +28,9 @@ jobs:
         backend: llvm
         
     - name: Install gtkwave and related tools for generating the simulation screenshots
-      run: sudo apt-get install -y gtkwave scrot xvfb python-pil python3-pyvirtualdisplay
+      run: | 
+        sudo apt-get install -y gtkwave scrot xvfb python-pil python3-pyvirtualdisplay
+        pip3 install pillow --user
       # python3-pip 
 
         
