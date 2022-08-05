@@ -23,5 +23,5 @@ Alternatives for gtkwave
  * [PulseView](https://sigrok.org/wiki/PulseView) (Qt frontend for sigrok)
    * includes serial bus decoders! (I guess sigrok already have them)
 ![pulseview screenshot on example 3](doc/screenshot_pulseview_on_example_3.png)
- * vscode + teroshdl internal viewer
+ * vscode + [teroshdl](https://github.com/TerosTechnology/vscode-terosHDL) internal viewer
 ![vscode+teroshdl signal and code view](doc/screenshot_vscode_with_teroshdl_on_example_3.png)
