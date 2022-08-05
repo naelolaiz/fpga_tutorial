@@ -15,7 +15,8 @@ jobs:
       fail-fast: false
       matrix:
         backend: [ '', mcode, llvm, gcc ]
-        version: [ 18.04, 20.04, latest ]
+        version: [ 20.04, latest ]
+        #version: [ 18.04, 20.04, latest ] # TODO: put 18.04 back commenting screenshots generation on it
     runs-on: ubuntu-${{ matrix.version }}
     name: '🐧 Ubuntu ${{ matrix.version }} · ${{ matrix.backend }}'
     steps:
