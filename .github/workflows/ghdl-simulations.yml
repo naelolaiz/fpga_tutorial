@@ -38,7 +38,7 @@ jobs:
         
     - name: testbench_sanity_check_expect_error
       id : sanity_check_test_expect_error
-      continue-on-error: true
+#      continue-on-error: true
       run: |
         echo "GHDL_PREFIX: $GHDL_PREFIX"
         echo "GHDL: $GHDL"
@@ -47,9 +47,9 @@ jobs:
         cd src/3-testbench/sanity_check_tb
         $GHDL -a sanity_check_tb.vhd
         $GHDL -e sanity_check_tb
-        ./sanity_check_tb --assert-level=error
-    - name: Check sanity check result
-      run: if [[ ${{ steps.sanity_check_test_expect_error.outcome }} == "failure" ]]; then exit 0; else exit 1; fi
+        ./sanity_check_tb --assert-level=error || echo "Expected failure OK!" && exit -1
+    #- name: Check sanity check result
+    #  run: if [[ ${{ steps.sanity_check_test_expect_error.outcome }} == "failure" ]]; then exit 0; else exit 1; fi
 
     - name: testbench_styles_example
       run: |
