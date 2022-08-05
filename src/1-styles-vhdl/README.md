@@ -1,5 +1,5 @@
 # Example showing different coding styles of VHDL 
-Let's say we want to implement a logic that turns on a LED only when either two buttons are ON, OR a third button in ON.
+Let's say we want to implement a logic that turns on a LED only when either two buttons are ON, OR a third button is ON. (a [SOP](https://www.electronics-tutorials.ws/boolean/sum-of-product.html))
 And since **our board has the led and the buttons active LOW**, we want to invert all the three button inputs and led outputs.
 ## Required logic diagram
 ![Required logic diagram](doc/required_logic_diagram.png)
