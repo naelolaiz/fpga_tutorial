@@ -1,5 +1,7 @@
 name: CI
 # Controls when the workflow will run
+env:
+  REGISTRY: ghcr.io
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
@@ -19,34 +21,33 @@ jobs:
         #version: [ 18.04, 20.04, latest ] # TODO: put 18.04 back commenting screenshots generation on it
     runs-on: ubuntu-${{ matrix.version }}
     name: '🐧 Ubuntu ${{ matrix.version }} · ${{ matrix.backend }}'
+    container:
+      image: ghcr.io/naelolaiz/hdltools:release
+      credentials:
+         username: ${{ github.actor }}
+         password: ${{ secrets.github_token }}
+      volumes:
+        - ${{ github.workspace }}/src:/src
+        - ${{ github.workspace }}/scripts:/scripts
+        - ${{ github.workspace }}/created_images:/created_images
     steps:
 
+    - name: create output dir for images
+      run: mkdir ${{ github.workspace }}/created_images
+    
     - name: '🧰 Checkout'
       uses: actions/checkout@v2
 
-    - uses: ghdl/setup-ghdl-ci@nightly
-      with: 
-        backend: llvm
-        
-    - name: Install gtkwave and related tools for generating the simulation screenshots
-      run: | 
-        sudo apt-get install -y gtkwave scrot xvfb python-pil python3-pyvirtualdisplay python3-pip
-        pip3 install --user --upgrade setuptools wheel # ubuntu 18.04 apparently doesnt have proper setuptools
-        pip3 install --user pillow pyscreenshot path
-        
     - name: testbench_sanity_check_expect_error
-      id : sanity_check_test_expect_error
       run: |
         echo "GHDL_PREFIX: $GHDL_PREFIX"
         echo "GHDL: $GHDL"
         echo "GHDL_LIBS: $GHDL_LIBS"
         $GHDL --version
-        cd src/3-testbench/sanity_check_tb
+        cd /src/3-testbench/sanity_check_tb
         $GHDL -a sanity_check_tb.vhd
         $GHDL -e sanity_check_tb
         ./sanity_check_tb --assert-level=error && exit -1 || echo "Expected failure OK!"
-        # create dir for next jobs
-        mkdir ${{ github.workspace }}/out_screenshots
 
     - name: testbench_styles_example
       run: |
@@ -58,8 +59,8 @@ jobs:
         $GHDL -a styles_example_tb.vhd
         $GHDL -e styles_example_tb
         $GHDL -r styles_example_tb --assert-level=error --vcd=styles_example_tb.vcd
-        python3 ../../scripts/gtkwave_export.py styles_example_tb.vcd
-        mv gtkwave_styles_example_tb.png ../../out_screenshots/
+        python3 /scripts/gtkwave_export.py styles_example_tb.vcd
+        mv gtkwave_styles_example_tb.png /created_images/
 
     - name: testbench_testbench_example
       run: |
@@ -68,10 +69,10 @@ jobs:
         $GHDL -a toplevel_timer_tb.vhd
         $GHDL -e toplevel_timer_tb
         $GHDL -r toplevel_timer_tb --assert-level=error --vcd=toplevel_timer_tb.vcd
-        python3 ../../scripts/gtkwave_export.py toplevel_timer_tb.vcd
-        mv gtkwave_toplevel_timer_tb.png ../../out_screenshots/
+        python3 /scripts/gtkwave_export.py toplevel_timer_tb.vcd
+        mv gtkwave_toplevel_timer_tb.png /created_images/
 
     - uses: actions/upload-artifact@v3
       with:
         name: screenshots-${{ matrix.version }}${{ matrix.backend }}
-        path: ${{ github.workspace }}/out_screenshots/
+        path: ${{ github.workspace }}/created_images/
