@@ -33,7 +33,7 @@ jobs:
     steps:
 
     - name: create output dir for images
-      run: mkdir ${{ github.workspace }}/created_images
+      run: mkdir /created_images
     
     - name: '🧰 Checkout'
       uses: actions/checkout@v2
