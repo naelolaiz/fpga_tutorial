@@ -40,6 +40,9 @@ jobs:
     - name: testbench_sanity_check_expect_error
       run: |
         ghdl --version
+        ls -lR
+        ls -lR /src
+        ls -l /
         cd /src/3-testbench/sanity_check_tb
         ghdl -a sanity_check_tb.vhd
         ghdl -e sanity_check_tb
