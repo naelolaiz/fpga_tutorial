@@ -29,11 +29,10 @@ jobs:
       volumes:
         - ${{ github.workspace }}/src:/src
         - ${{ github.workspace }}/scripts:/scripts
-        - ${{ github.workspace }}/created_images:/created_images
     steps:
 
     - name: create output dir for images
-      run: mkdir /created_images
+      run: mkdir /src/created_images
     
     - name: '🧰 Checkout'
       uses: actions/checkout@v2
@@ -60,7 +59,7 @@ jobs:
         $GHDL -e styles_example_tb
         $GHDL -r styles_example_tb --assert-level=error --vcd=styles_example_tb.vcd
         python3 /scripts/gtkwave_export.py styles_example_tb.vcd
-        mv gtkwave_styles_example_tb.png /created_images/
+        mv gtkwave_styles_example_tb.png /src/created_images/
 
     - name: testbench_testbench_example
       run: |
@@ -70,9 +69,9 @@ jobs:
         $GHDL -e toplevel_timer_tb
         $GHDL -r toplevel_timer_tb --assert-level=error --vcd=toplevel_timer_tb.vcd
         python3 /scripts/gtkwave_export.py toplevel_timer_tb.vcd
-        mv gtkwave_toplevel_timer_tb.png /created_images/
+        mv gtkwave_toplevel_timer_tb.png /src/created_images/
 
     - uses: actions/upload-artifact@v3
       with:
         name: screenshots-${{ matrix.version }}${{ matrix.backend }}
-        path: ${{ github.workspace }}/created_images/
+        path: ${{ github.workspace }}/src/created_images/
