@@ -27,11 +27,12 @@ jobs:
          username: ${{ github.actor }}
          password: ${{ secrets.github_token }}
       volumes:
-        - ${{ github.workspace }}/src:/src
+        - src:/src
+        - generated_images:/generated_images
     steps:
 
     - name: create output dir for images
-      run: mkdir /src/created_images
+      run: mkdir generated_images
     
     - name: '🧰 Checkout'
       uses: actions/checkout@v2
@@ -39,9 +40,9 @@ jobs:
     - name: testbench_sanity_check_expect_error
       run: |
         ghdl --version
-        #ls -lR
-        #ls -lR /src
-        #ls -l /
+        ls -lR
+        ls -lR /src
+        ls -l /
         cd src/3-testbench/sanity_check_tb
         ghdl -a sanity_check_tb.vhd
         ghdl -e sanity_check_tb
@@ -58,7 +59,7 @@ jobs:
         ghdl -e styles_example_tb
         ghdl -r styles_example_tb --assert-level=error --vcd=styles_example_tb.vcd
         python3 /tools/vcd2png.py styles_example_tb.vcd
-        mv gtkwave_styles_example_tb.png /src/created_images/
+        mv gtkwave_styles_example_tb.png /generated_images
 
     - name: testbench_testbench_example
       run: |
@@ -68,9 +69,9 @@ jobs:
         ghdl -e toplevel_timer_tb
         ghdl -r toplevel_timer_tb --assert-level=error --vcd=toplevel_timer_tb.vcd
         python3 /tools/vcd2png.py toplevel_timer_tb.vcd
-        mv gtkwave_toplevel_timer_tb.png /src/created_images/
+        mv gtkwave_toplevel_timer_tb.png /generated_images
 
     - uses: actions/upload-artifact@v3
       with:
         name: screenshots-${{ matrix.version }}${{ matrix.backend }}
-        path: ${{ github.workspace }}/src/created_images/
+        path: generated_images
