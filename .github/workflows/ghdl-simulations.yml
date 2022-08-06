@@ -39,35 +39,32 @@ jobs:
 
     - name: testbench_sanity_check_expect_error
       run: |
-        echo "GHDL_PREFIX: $GHDL_PREFIX"
-        echo "GHDL: $GHDL"
-        echo "GHDL_LIBS: $GHDL_LIBS"
-        $GHDL --version
+        ghdl --version
         cd /src/3-testbench/sanity_check_tb
-        $GHDL -a sanity_check_tb.vhd
-        $GHDL -e sanity_check_tb
+        ghdl -a sanity_check_tb.vhd
+        ghdl -e sanity_check_tb
         ./sanity_check_tb --assert-level=error && exit -1 || echo "Expected failure OK!"
 
     - name: testbench_styles_example
       run: |
         cd src/1-styles-vhdl
-        $GHDL -a dataflow_example.vhd
-        $GHDL -a structural_components.vhd
-        $GHDL -a structural_example.vhd
-        $GHDL -a behavioral_example.vhd
-        $GHDL -a styles_example_tb.vhd
-        $GHDL -e styles_example_tb
-        $GHDL -r styles_example_tb --assert-level=error --vcd=styles_example_tb.vcd
+        ghdl -a dataflow_example.vhd
+        ghdl -a structural_components.vhd
+        ghdl -a structural_example.vhd
+        ghdl -a behavioral_example.vhd
+        ghdl -a styles_example_tb.vhd
+        ghdl -e styles_example_tb
+        ghdl -r styles_example_tb --assert-level=error --vcd=styles_example_tb.vcd
         python3 /scripts/gtkwave_export.py styles_example_tb.vcd
         mv gtkwave_styles_example_tb.png /src/created_images/
 
     - name: testbench_testbench_example
       run: |
         cd src/3-testbench
-        $GHDL -a toplevel_timer.vhd
-        $GHDL -a toplevel_timer_tb.vhd
-        $GHDL -e toplevel_timer_tb
-        $GHDL -r toplevel_timer_tb --assert-level=error --vcd=toplevel_timer_tb.vcd
+        ghdl -a toplevel_timer.vhd
+        ghdl -a toplevel_timer_tb.vhd
+        ghdl -e toplevel_timer_tb
+        ghdl -r toplevel_timer_tb --assert-level=error --vcd=toplevel_timer_tb.vcd
         python3 /scripts/gtkwave_export.py toplevel_timer_tb.vcd
         mv gtkwave_toplevel_timer_tb.png /src/created_images/
 
