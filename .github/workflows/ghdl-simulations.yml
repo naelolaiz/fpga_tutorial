@@ -58,8 +58,13 @@ jobs:
         ghdl -a styles_example_tb.vhd
         ghdl -e styles_example_tb
         ghdl -r styles_example_tb --assert-level=error --vcd=styles_example_tb.vcd
+        # generate signal screenshot of testbench simulator
         python3 /tools/vcd2png.py styles_example_tb.vcd
         mv gtkwave_styles_example_tb.png /generated_images
+        # generate diagram of dataflow_example
+        yosys -m ghdl -p 'ghdl --std=08 dataflow_example; prep -top dataflow_example; write_json -compat-int svg.json'
+        netlistsvg svg.json -o /generated_images/dataflow_example.svg
+        
 
     - name: testbench_testbench_example
       run: |
@@ -68,8 +73,12 @@ jobs:
         ghdl -a toplevel_timer_tb.vhd
         ghdl -e toplevel_timer_tb
         ghdl -r toplevel_timer_tb --assert-level=error --vcd=toplevel_timer_tb.vcd
+        # generate signal screenshot of testbench simulator
         python3 /tools/vcd2png.py toplevel_timer_tb.vcd
         mv gtkwave_toplevel_timer_tb.png /generated_images
+        # generate diagram of toplevel_timer
+        yosys -m ghdl -p 'ghdl --std=08 toplevel_timer; prep -top toplevel_timer; write_json -compat-int svg.json'
+        netlistsvg svg.json -o /generated_images/toplevel_timer.svg
 
     - uses: actions/upload-artifact@v3
       with:
