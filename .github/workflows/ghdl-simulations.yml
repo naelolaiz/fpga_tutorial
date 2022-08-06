@@ -50,7 +50,6 @@ jobs:
     - name: testbench_styles_example
       run: |
         cd src/1-styles-vhdl
-        pushd
         ghdl -a dataflow_example.vhd
         ghdl -a structural_components.vhd
         ghdl -a structural_example.vhd
