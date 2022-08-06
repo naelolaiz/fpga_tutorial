@@ -58,7 +58,7 @@ jobs:
         ghdl -a styles_example_tb.vhd
         ghdl -e styles_example_tb
         ghdl -r styles_example_tb --assert-level=error --vcd=styles_example_tb.vcd
-        python3 scripts/gtkwave_export.py styles_example_tb.vcd
+        python3 /scripts/gtkwave_export.py styles_example_tb.vcd
         mv gtkwave_styles_example_tb.png /src/created_images/
 
     - name: testbench_testbench_example
@@ -68,7 +68,7 @@ jobs:
         ghdl -a toplevel_timer_tb.vhd
         ghdl -e toplevel_timer_tb
         ghdl -r toplevel_timer_tb --assert-level=error --vcd=toplevel_timer_tb.vcd
-        python3 scripts/gtkwave_export.py toplevel_timer_tb.vcd
+        python3 /scripts/gtkwave_export.py toplevel_timer_tb.vcd
         mv gtkwave_toplevel_timer_tb.png /src/created_images/
 
     - uses: actions/upload-artifact@v3
