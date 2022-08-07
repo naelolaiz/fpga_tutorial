@@ -7,10 +7,11 @@ Collecting small FPGA examples as a tutorial
 Added [github actions CI jobs](https://github.com/naelolaiz/fpga_tutorial/actions) for simulating the examples with GHDL!
 ![screenshot github action](doc/screenshot_ci_job_with_ghdl.png)
 
-### Auto-generated diagrams in jobs!
+### Github-actions auto-generate logic diagrams of VHD files entities
+Each gitlab job creates a diagram of the indicated entities, and publishes the generated .svg diagrams as artifacts.
 ![dataflow_example auto-generated diagram](doc/dataflow_example.svg)
 
-### Auto-generated screenshots in jobs
+### Github-actions auto-generate simulation signals views
 Each gitlab job creates a screenshot of gtkwave showing the signals, and it is upload as an artifact:
 
 ![automatic screenshots of gtkwave!](doc/screenshot_automatic_generated_gtkwave_screenshots.png)
