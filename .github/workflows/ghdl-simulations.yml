@@ -62,6 +62,7 @@ jobs:
         python3 /tools/vcd2png.py styles_example_tb.vcd
         mv gtkwave_styles_example_tb.png /generated_images
         # generate diagram of dataflow_example
+        ghdl -a --std=08 dataflow_example.vhd
         yosys -m ghdl -p 'ghdl --std=08 dataflow_example; prep -top dataflow_example; write_json -compat-int svg.json'
         netlistsvg svg.json -o /generated_images/dataflow_example.svg
         
@@ -77,6 +78,7 @@ jobs:
         python3 /tools/vcd2png.py toplevel_timer_tb.vcd
         mv gtkwave_toplevel_timer_tb.png /generated_images
         # generate diagram of toplevel_timer
+        ghdl -a --std=08 toplevel_timer.vhd
         yosys -m ghdl -p 'ghdl --std=08 toplevel_timer; prep -top toplevel_timer; write_json -compat-int svg.json'
         netlistsvg svg.json -o /generated_images/toplevel_timer.svg
 
