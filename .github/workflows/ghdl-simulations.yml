@@ -30,9 +30,6 @@ jobs:
         - src:/src
         - generated_images:/generated_images
     steps:
-
-    - name: create output dir for images
-      run: mkdir generated_images
     
     - name: '🧰 Checkout'
       uses: actions/checkout@v2
