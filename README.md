@@ -9,7 +9,7 @@ Added [github actions CI jobs](https://github.com/naelolaiz/fpga_tutorial/action
 
 ### Github-actions auto-generating logic diagrams of VHD files entities
 Each gitlab job creates a diagram of the indicated entities, and publishes the generated .svg diagrams as artifacts.
-![dataflow_example auto-generated diagram](doc/dataflow_example.svg)
+![dataflow_example auto-generated diagram](src/1-styles-vhdl/doc/dataflow_example.svg)
 
 ### Github-actions auto-generating simulation signals views
 Each gitlab job creates a screenshot of gtkwave showing the signals, and it is upload as an artifact:

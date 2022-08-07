@@ -3,7 +3,7 @@ Let's say we want to implement a logic that turns on a LED only when either two 
 
 Since **our board has the led and the buttons active LOW**, we want to invert all the three button inputs and led outputs.
 ## Required logic diagram
-![Required logic diagram](doc/required_logic_diagram.png)
+![Required logic diagram](doc/dataflow_example.svg)
 ## Truth table
 | **Button1** | **Button2** | **Button3** | not Button1 | not Button2 | AND output | not Button3 | OR output | **Final OUTPUT** |
 |-------------|-------------|-------------|-------------|-------------|------------|-------------|-----------|------------------|
