@@ -1,7 +1,7 @@
 #  Example on how to create a testbench for simulations
 Example of testbench of a top-level entity using a single one-time-shot timer
 # TOC
-1. [How the DUT looks](#dut-diagram) 
+1. [DUT top-level diagram](#dut-diagram) 
 2. [How the simulation looks](#questa-simulation)
 3. [Testbench code](#explanation-of-the-testbench-code)
 ## DUT top-level diagram
