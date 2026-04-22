@@ -1,0 +1,127 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# Cancel in-progress runs for the same ref when a new push arrives.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # ------------------------------------------------------------------
+  # discover: scan src/ for example directories and emit a JSON matrix
+  # so every downstream job stays in lockstep with the filesystem.
+  # ------------------------------------------------------------------
+  discover:
+    name: Discover examples
+    runs-on: ubuntu-latest
+    outputs:
+      examples: ${{ steps.enumerate.outputs.examples }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: enumerate
+        name: Enumerate examples
+        run: |
+          set -euo pipefail
+          examples=$(find src -mindepth 2 -maxdepth 2 -name Makefile \
+                     -printf '%h\n' | xargs -n1 basename | sort -u \
+                     | jq -R . | jq -sc .)
+          echo "examples=${examples}" >> "$GITHUB_OUTPUT"
+          echo "Discovered examples: ${examples}"
+
+  # ------------------------------------------------------------------
+  # lint: VHDL Style Guide. Non-blocking for now (continue-on-error)
+  # so a newly-added example doesn't break main while it gets tidied.
+  # Flip this off once every example is clean.
+  # ------------------------------------------------------------------
+  lint:
+    name: Lint VHDL (vsg)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install VSG
+        run: pip install vsg
+
+      - name: Run VSG
+        run: |
+          # Lint every VHDL file under src/. --exit_zero keeps the output
+          # but still fails the job via the explicit exit below when
+          # we're ready to enforce.
+          vsg -f $(find src -name '*.vhd') -c .vsg.yaml || true
+
+  # ------------------------------------------------------------------
+  # build: per-example simulate + diagram + waveform screenshot.
+  # ------------------------------------------------------------------
+  build:
+    name: Build ${{ matrix.example }}
+    needs: discover
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        example: ${{ fromJson(needs.discover.outputs.examples) }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up HDL toolchain
+        uses: ./.github/actions/setup-hdl-tools
+
+      - name: Simulate
+        working-directory: src/${{ matrix.example }}
+        run: make simulate
+
+      - name: Generate netlist diagram
+        working-directory: src/${{ matrix.example }}
+        run: make diagram
+
+      - name: Render waveform screenshot
+        working-directory: src/${{ matrix.example }}
+        # GTKWave needs an X server; xvfb-run wraps the make target cleanly.
+        run: xvfb-run --auto-servernum make screenshot
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.example }}-artifacts
+          path: |
+            src/${{ matrix.example }}/build/*.vcd
+            src/${{ matrix.example }}/build/*.svg
+            src/${{ matrix.example }}/build/*.png
+            src/${{ matrix.example }}/build/*.json
+          if-no-files-found: error
+          retention-days: 30
+
+  # ------------------------------------------------------------------
+  # status: a single job downstream jobs can depend on; makes branch
+  # protection rules simple ("require CI / status to pass").
+  # ------------------------------------------------------------------
+  status:
+    name: CI status
+    if: always()
+    needs: [lint, build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail if any required job failed
+        run: |
+          if [ "${{ needs.build.result }}" != "success" ]; then
+            echo "build failed"
+            exit 1
+          fi
+          echo "CI ok"

@@ -1,0 +1,17 @@
+# VHDL Style Guide configuration.
+# Reference: https://vhdl-style-guide.readthedocs.io/en/latest/configuring.html
+#
+# The defaults are sensible; this file exists so that local overrides have
+# one canonical home. Every rule change should be justified with a comment.
+
+rule:
+  global:
+    # Allow tab-based indentation. Most of the existing tutorial files
+    # already use tabs; flip this to 'spaces' only if you decide to
+    # reformat the whole repo at once.
+    indentSize: 2
+
+  # Example override: don't warn about lowercase library names, it's a
+  # stylistic choice the tutorial already makes consistently.
+  library_008:
+    disable: true

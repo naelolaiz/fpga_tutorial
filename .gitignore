@@ -1,0 +1,39 @@
+# --- Build outputs ---------------------------------------------------------
+build/
+work/
+*.cf
+*.o
+*.vcd
+*.ghw
+*.fst
+*.json
+# Keep the auto-generated SVG diagrams checked in if you want them rendered
+# in the README -- but by default they belong to the build output.
+*.svg
+
+# Keep doc/*.png under git (manually curated screenshots) but ignore
+# build-generated ones.
+src/**/build/*.png
+
+# Binaries GHDL may leave in the source tree if a user forgets --workdir.
+src/**/[a-z]*_tb
+src/**/[a-z]*_tb.exe
+
+# --- Python ----------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.tox/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# --- Editors / OS ----------------------------------------------------------
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+*~

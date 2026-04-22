@@ -1,0 +1,55 @@
+name: Set up HDL toolchain
+description: >-
+  Installs GHDL, yosys (+ ghdl-yosys-plugin), netlistsvg, GTKWave, Xvfb and
+  the Python dependencies used by scripts/. Centralised so every CI job
+  installs exactly the same versions.
+
+inputs:
+  python-version:
+    description: Python version to install.
+    required: false
+    default: "3.11"
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ inputs.python-version }}
+        cache: pip
+        cache-dependency-path: scripts/requirements.txt
+
+    - name: Install apt packages (GHDL, yosys, GTKWave, Xvfb, Node for netlistsvg)
+      shell: bash
+      run: |
+        set -euo pipefail
+        sudo apt-get update
+        sudo apt-get install -y --no-install-recommends \
+          ghdl \
+          yosys \
+          yosys-plugin-ghdl \
+          gtkwave \
+          xvfb \
+          xauth \
+          nodejs \
+          npm
+
+    - name: Install netlistsvg
+      shell: bash
+      run: sudo npm install -g netlistsvg
+
+    - name: Install Python dependencies
+      shell: bash
+      run: pip install --upgrade pip && pip install -r scripts/requirements.txt
+
+    - name: Print tool versions
+      shell: bash
+      run: |
+        echo "::group::tool versions"
+        ghdl --version | head -n1
+        yosys -V
+        netlistsvg --help | head -n1 || true
+        gtkwave --version | head -n1 || true
+        python --version
+        echo "::endgroup::"
